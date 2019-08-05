@@ -1,0 +1,30 @@
+{
+  "name": "postgis_x3d_nodejs_viewer",
+  "version": "1.0.0",
+  "description": "PostGIS Minimialist X3D Viewer  ================ This viewer is a viewer for viewing PostGIS http://postgis.net geometry queries utilizing PostGIS 2.0+,  X3DOM http://www.x3dom.org/ , JQuery http://jquery.com, color picker JQuery plugin and a Web server that supports your language of choice (ASP.NET w. npgsql.net utilizing C# or VB.Net) or PHP.  It is a loose wrapper around the PostGIS ST_AsX3D function ([http://postgis.net/docs/ST_AsX3D.html]) .",
+  "main": "test.js",
+  "dependencies": {
+    "local-web-server": "^3.0.7",
+    "lws-cors": "^2.0.1",
+    "mocks": "^0.0.15",
+    "pg-promise": "^8.7.5"
+  },
+  "devDependencies": {
+    "koa-route": "^3.2.0",
+    "lws": "^2.0.3",
+    "lws-body-parser": "^1.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robe2/postgis_x3d_viewer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robe2/postgis_x3d_viewer/issues"
+  },
+  "homepage": "https://github.com/robe2/postgis_x3d_viewer#readme"
+}
