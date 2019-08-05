@@ -7,6 +7,7 @@ $$
   DECLARE var_sql text := trim(trim(param_sql), ';'); --get rid of trailing spaces and ;
   BEGIN
       IF param_spatial_type = 'geometry' THEN
+      RAISE NOTICE 'var_sql'
 		EXECUTE 'WITH data AS (SELECT (' || var_sql || ') AS geom ) SELECT geom FROM data;' INTO STRICT var_geom;
 		
         SELECT '<Transform>

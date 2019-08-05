@@ -30,7 +30,7 @@
     </style>
 
     <script type="text/javascript">
-        var postgis_handler = "getX3Dmock";
+        var postgis_handler = "getX3D";
         function showQuery() {
             $('#querylog').prepend('<hr/>' + $('#txtsql').val()); //append last query run
             $.post(postgis_handler, 
@@ -44,7 +44,8 @@
                     console.log(postgis_handler)
                     console.log(data)
                     // $("scene").append(data);
-                    $("scene").append('<shape> <appearance> <material diffuseColor="1 0 0"></material>                                        </appearance>                                        <box></box>                                     </shape> ');
+                    // $("scene").append('<shape> <appearance> <material diffuseColor="1 0 0"></material>                                        </appearance>                                        <box></box>                                     </shape> ');
+                    $("scene").append( data[0].postgis_viewer_x3d);
 
                 });
 
@@ -63,7 +64,7 @@
     <h1>Minimal X3Dviewer for PostGIS and SFCGAL. </h1>
     Author: Josafat Guerrero<br>
     Based on robe2 version<br>
-    This page consumes data PostGIS from a RestService based on NodeJS.
+    This page consumes data PostGIS from a Rest Service based on NodeJS.
 
     <h1>Usage:</h1>
     Write a SQL query and show results. The result is assambled within an X3D scene.

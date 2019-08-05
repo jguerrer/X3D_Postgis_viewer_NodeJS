@@ -16,7 +16,7 @@ const pgp = require('pg-promise')(initOptions);
 
 const connection = {
   host: 'localhost',
-  port: 5434,
+  port: 5432,
   database: 'TemasSelectosCIG',
   user: 'postgres',
   password: 'postgresdb'
@@ -30,67 +30,65 @@ const db = pgp(connection);
 async function getX3D(ctx) {
 
   console.log("GET getX3D");
+
   console.log(ctx.request.url)//mostrar la ruta completa de la peticion
   console.log(ctx.request.querystring)//el querystring pero como una cadena
+  console.log(ctx.request.body)
 
 
   var parametros = ctx.request.query;//el query como un objeto
+  var sql = ctx.request.body.sql;//el query como un objeto
+  var bvals = ctx.request.body.bvals;//el query como un objeto
+  var geometry = ctx.request.body.spatial_type;//el query como un objeto
 
+  console.log(sql);
+  console.log(bvals);
+  console.log(geometry);
   //aqui vamos a utilizar algunos parametros
-  let sqlReplacements = { municipio_id: 499 };
+  // let sqlReplacements = { municipio_id: 499 };
+  let sqlReplacements = {  };
 
-  if (parametros.municipio_id != null) {
-    sqlReplacements.municipio_id = parametros.municipio_id;//reemplazando el id por el enviado
-    console.log(parametros.municipio_id);
-  }
-
+ 
+   sql= sql.replace(/'/g, "\'\'");
   let sqlminQuery = 'select mun2.id  id, mun2.cvemuni cvemuni, mun2.nom_mun, mun2.layer, st_asgeojson(   st_transform(st_setsrid(mun2.geom,6372),4326)  ) json from municipios_2000 mun1, municipios_2000 mun2 where st_touches(mun1.geom,mun2.geom) and mun1.id <> mun2.id and mun1.id = ${municipio_id}  ';
 
-  let resultados = await db.any(sqlminQuery, sqlReplacements);//esperamos los resultados de la consulta con await
+  let query='SELECT postgis_viewer_x3d(\'' + sql +'\', \''+ geometry +'\',array['+ bvals+']);';
+  console.log(query)  
+  let resultados = await db.any(query, sqlReplacements);//esperamos los resultados de la consulta con await
   //console.log(results);
 
 
-  //plantilla de objeto geoJSON, la cual debe ser unica para cada peticion
-  let geoJSONResult = {
-    "type": "FeatureCollection",
-    "totalFeatures": 0,  //este valor se debe actualizar
-    "features": [],//aqui es donde se colocan los rasgos
-    "crs": {
-      "type": "name",
-      "properties": {
-        "name": "urn:ogc:def:crs:EPSG::4326"//habra que modificarlo conforme a las respuestas
-      }
-    }
-  };
+ 
 
-  //iteramos sobre el arreglo de respuestas o results, es decir, para cada resultado_i ejecutamos una pieza de codigo que crea un feature
-  resultados.forEach(function (resultado_i) {
-    //creamos una plantilla para cada feature
-    //los properties son especificas de cada fila.
-    //aunque hay manera de automatizar los properties que se agregan, eso queda fuera del alcance de la practica, sorry =(
-    console.log(resultado_i);
-    let feature = {
-      "type": "Feature",
-      "id": resultado_i.id,
-      "geometry": JSON.parse(resultado_i.json),
-      "geometry_name": "geom",
-      "properties": {
-        "id": resultado_i.id,  //<= muevanle aqui
-        "cve_muni": resultado_i.cvemuni, //<= aqui,
-        "nom_mun": resultado_i.nom_mun,//<= aqui
-        "layer": resultado_i.layer//<= y  aqui
-        //si faltan mas cosas, agregarlas
-      }
-    };
-    //console.log(JSON.stringify(feature));//por si quisiera ver el contenido de cada iteracion
-    //revisar https://www.w3schools.com/jsref/jsref_push.asp para mas informacion de push()
-    geoJSONResult.features.push(feature);//agregamos el feature al arreglo numFeatures
-  });
+  // //iteramos sobre el arreglo de respuestas o results, es decir, para cada resultado_i ejecutamos una pieza de codigo que crea un feature
+  // resultados.forEach(function (resultado_i) {
+  //   //creamos una plantilla para cada feature
+  //   //los properties son especificas de cada fila.
+  //   //aunque hay manera de automatizar los properties que se agregan, eso queda fuera del alcance de la practica, sorry =(
+  //   console.log(resultado_i);
+  //   let feature = {
+  //     "type": "Feature",
+  //     "id": resultado_i.id,
+  //     "geometry": JSON.parse(resultado_i.json),
+  //     "geometry_name": "geom",
+  //     "properties": {
+  //       "id": resultado_i.id,  //<= muevanle aqui
+  //       "cve_muni": resultado_i.cvemuni, //<= aqui,
+  //       "nom_mun": resultado_i.nom_mun,//<= aqui
+  //       "layer": resultado_i.layer//<= y  aqui
+  //       //si faltan mas cosas, agregarlas
+  //     }
+  //   };
+  //   //console.log(JSON.stringify(feature));//por si quisiera ver el contenido de cada iteracion
+  //   //revisar https://www.w3schools.com/jsref/jsref_push.asp para mas informacion de push()
+  //   geoJSONResult.features.push(feature);//agregamos el feature al arreglo numFeatures
+  // });
 
   //un poco de cortesia al programador
-  console.log("Registros agregados: " + geoJSONResult.features.length);
-  geoJSONResult.totalFeatures = geoJSONResult.features.length;//actualizando el numero de registros de GeoJSON
-  ctx.body = geoJSONResult;//devolviendo los resultados.
+  // console.log("Registros agregados: " + geoJSONResult.features.length);
+  // geoJSONResult.totalFeatures = geoJSONResult.features.length;//actualizando el numero de registros de GeoJSON
+  console.log(resultados);
+  ctx.body = resultados;//devolviendo los resultados.
 }
 
 //definicion del recurso para obtener X3D
