@@ -49,7 +49,7 @@ async function getX3D(ctx) {
   let sqlReplacements = {  };
 
  
-   sql= sql.replace(/'/g, "\'\'");
+   sql= sql.replace(/'/g, "\'\'");//escaping 
   let sqlminQuery = 'select mun2.id  id, mun2.cvemuni cvemuni, mun2.nom_mun, mun2.layer, st_asgeojson(   st_transform(st_setsrid(mun2.geom,6372),4326)  ) json from municipios_2000 mun1, municipios_2000 mun2 where st_touches(mun1.geom,mun2.geom) and mun1.id <> mun2.id and mun1.id = ${municipio_id}  ';
 
   let query='SELECT postgis_viewer_x3d(\'' + sql +'\', \''+ geometry +'\',array['+ bvals+']);';

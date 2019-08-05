@@ -6,19 +6,19 @@
 <head>
     <title>PostGIS Minimalist 3D Spatial Query Viewer, Node BAsed and no PHP!!! </title>
     <link rel="stylesheet" href="js/colorpicker/css/colorpicker.css" type="text/css" />
-    <!-- <link rel="stylesheet" type="text/css" href="x3dom.css" />
-    <script type="text/javascript" src="js/x3dom-full.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="x3dom.css" />
+    <script type="text/javascript" src="js/x3dom-full.js"></script>
 
-    <script type='text/javascript' src='https://www.x3dom.org/download/x3dom.js'> </script> 
-    <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/download/x3dom.css'></link> 
+        <!-- <script type='text/javascript' src='https://www.x3dom.org/download/x3dom.js'> </script> 
+        <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/download/x3dom.css'></link>  -->
 
-    <!-- <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script> -->
+    <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
 
-    <script
+     <!-- <script
 			  src="https://code.jquery.com/jquery-3.4.1.js"
 			  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-              crossorigin="anonymous"></script>
-              
+              crossorigin="anonymous"></script> 
+             -->
     <!--http://www.eyecon.ro/colorpicker -->
     <script type="text/javascript" src="js/colorpicker/js/colorpicker.js"></script>
     <style>
@@ -46,7 +46,9 @@
                     // $("scene").append(data);
                     // $("scene").append('<shape> <appearance> <material diffuseColor="1 0 0"></material>                                        </appearance>                                        <box></box>                                     </shape> ');
                     $("scene").append( data[0].postgis_viewer_x3d);
-
+                    
+                    // $("x3dresult").remove();
+                    $("#x3dresult")[0].innerHTML='<b>'+ data[0].postgis_viewer_x3d + '</b>';
                 });
 
         }
@@ -126,7 +128,7 @@
                 <div id="result" style="width:60%">
 
                     <!-- Contenedor X3d-->
-                    <x3d width="800px" height="600px">
+                    <x3d width="600px" height="500px">
                         <scene>
                             <NavigationInfo type='"EXAMINE" "WALK" "FLY" "ANY"' ></NavigationInfo>
 
@@ -146,6 +148,7 @@
                     style='font-family:Courier;font-size:small;overflow-y:scroll;width:100%;height:600px'></div>
             </td>
         </tr>
+        <tr><td><div id="x3dresult" style="width:60%"></div></td></tr>
     </table>
 
 
